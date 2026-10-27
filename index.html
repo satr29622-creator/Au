@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNKNOWN - CHAPTER 1</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(15, 0, 0, 0.95)), url('https://unsplash.com') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e3e3e3;
+            overflow: hidden;
+            transition: background-color 0.2s ease;
+        }
+        .error-flash {
+            animation: flashRed 0.3s ease-in-out;
+        }
+        @keyframes flashRed {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(139, 0, 0, 0.8); }
+        }
+        .phone-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 850px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+        }
+        .hint-section {
+            margin-top: 40px;
+            width: 100%;
+        }
+        .hint-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #8b0000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(139, 0, 0, 0.5);
+        }
+        .hint-text {
+            font-size: 13px;
+            color: #a9a9a9;
+            line-height: 1.5;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #3a0000;
+            border-radius: 5px;
+        }
+        .dots-container {
+            display: flex;
+            gap: 15px;
+            margin: 35px 0;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border: 2px solid #8b0000;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .dot.active {
+            background-color: #ff0000;
+            box-shadow: 0 0 8px #ff0000;
+            border-color: #ff0000;
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px 25px;
+            margin-bottom: 40px;
+        }
+        .key {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background-color: rgba(20, 20, 20, 0.6);
+            border: 1px solid #3a0000;
+            color: #d3d3d3;
+            font-size: 28px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.1s;
+        }
+        .key:active {
+            background-color: rgba(139, 0, 0, 0.4);
+            border-color: #ff0000;
+            color: #fff;
+        }
+        .key span {
+            font-size: 9px;
+            letter-spacing: 1px;
+            margin-top: -2px;
+            color: #666;
+        }
+        .footer-action {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container" id="phoneContainer">
+        <!-- Narasi Cerita AU -->
+        <div class="hint-section">
+            <div class="hint-title">Sistem Terkunci</div>
+            <div class="hint-text">
+                "Ponsel milik Jaka tergeletak di lantai koridor yang gelap. Ada noda merah di layarnya. Sebuah pesan berkedip: KODE KELUAR ADALAH DUA DIGIT AKHIR TAHUN KEJADIAN DI LAB TUA DITAMBAH JUMLAH KORBAN YANG HILANG."
+                <br><br>
+                <span style="color: #ff0000; font-weight: bold;">JANGAN SALAH MEMASUKKAN KODE. DIA SEDANG MENDENGARKAN.</span>
+            </div>
+            
+            <!-- Indikator Kode -->
+            <div style="display: flex; justify-content: center;">
+                <div class="dots-container">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tombol Layar Kunci -->
+        <div class="keypad">
+            <button class="key" onclick="pressKey('1')">1</button>
+            <button class="key" onclick="pressKey('2')">2<span>ABC</span></button>
+            <button class="key" onclick="pressKey('3')">3<span>DEF</span></button>
+            <button class="key" onclick="pressKey('4')">4<span>GHI</span></button>
+            <button class="key" onclick="pressKey('5')">5<span>JKL</span></button>
+            <button class="key" onclick="pressKey('6')">6<span>MNO</span></button>
+            <button class="key" onclick="pressKey('7')">7<span>PQRS</span></button>
+            <button class="key" onclick="pressKey('8')">8<span>TUV</span></button>
+            <button class="key" onclick="pressKey('9')">9<span>WXYZ</span></button>
+            <div style="visibility: hidden;"></div>
+            <button class="key" onclick="pressKey('0')">0</button>
+        </div>
+
+        <div class="footer-action">
+            <div>PANGGILAN DARURAT</div>
+            <div onclick="resetPasscode()" style="cursor: pointer; color: #8b0000;">HAPUS</div>
+        </div>
+    </div>
+
+    <script>
+        // PENGATURAN CERITA KAMU:
+        const KODE_RAHASIA = "6660"; // Silakan ganti 4 angka ini sesuai teka-tekimu
+        const LINK_CHAPTER_2 = "https://x.com"; // Tempel link kelanjutan cerita AU-mu di sini
+
+        let currentInput = "";
+        const dots = document.querySelectorAll('.dot');
+        const container = document.getElementById('phoneContainer');
+
+        // Menggunakan audio efek bawaan browser (suara ketukan)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playKnockSound(frequency, duration) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function pressKey(num) {
+            playKnockSound(150, 0.1); // Suara klik tombol mekanis
+            if (currentInput.length < 4) {
+                currentInput += num;
+                updateDots();
+                
+                if (currentInput.length === 4) {
+                    setTimeout(checkPin, 300);
+                }
+            }
+        }
+
+        function updateDots() {
+            dots.forEach((dot, index) => {
+                if (index < currentInput.length) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function resetPasscode() {
+            currentInput = "";
+            updateDots();
+        }
+
+        function checkPin() {
+            if (currentInput === KODE_RAHASIA) {
+                playKnockSound(600, 0.4);
+                alert("KLIK... Pintu laboratorium terbuka. Kamu berhasil lolos ke Chapter 2.");
+                window.location.href = LINK_CHAPTER_2;
+            } else {
+                // Efek jumpscare suara rendah & layar berkedip merah
+                playKnockSound(80, 0.6); 
+                document.body.classList.add('error-flash');
+                alert("SALAH! Ada suara langkah kaki mendekat dengan cepat dari ujung lorong...");
+                
+                setTimeout(() => {
+                    document.body.classList.remove('error-flash');
+                }, 300);
+                
+                resetPasscode();
+            }
+        }
+    </script>
+</body>
+</html>
